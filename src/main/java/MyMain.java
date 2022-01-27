@@ -3,12 +3,51 @@ import java.util.Arrays;
 
 public class MyMain {
     // ********************
-    // Code from homework
+    // Code from last class
     // ********************
 
     public static int[] merge(int[] arr1, int[] arr2) {
-        // COPY AND PASTE YOUR CODE HERE
-        return new int[] {1, 2, 3, 4};
+        // YOUR CODE HERE
+//        return null;
+
+        // Indices to keep track of location in input and output arrays
+        int idx1 = 0;
+        int idx2 = 0;
+        int outputIdx = 0;
+
+        int[] output = new int[arr1.length + arr2.length];
+
+        // While we have two values left to compare...
+        // * Copy the smaller value into the output array
+        // * Increment the appropriate indexes
+        while (idx1 < arr1.length && idx2 < arr2.length)
+        {
+            if (arr2[idx2] < arr1[idx1]) {
+                output[outputIdx] = arr2[idx2];
+                idx2++;
+            }
+            else {
+                output[outputIdx] = arr1[idx1];
+                idx1++;
+            }
+            outputIdx++;
+        }
+
+        // Copy rest of array A if array arr2 finished first
+        while (idx1 < arr1.length) {
+            output[outputIdx] = arr1[idx1];
+            idx1++;
+            outputIdx++;
+        }
+
+        // Copy rest of array arr2 if array A finished first
+        while (idx2 < arr2.length) {
+            output[outputIdx] = arr2[idx2];
+            idx2++;
+            outputIdx++;
+        }
+
+        return output;
     }
 
     // **************************
@@ -25,8 +64,11 @@ public class MyMain {
     // subArray([1, 4, 3, 7], 0, 4) => [1, 4, 3, 7]
     // subArray([1, 4, 3, 7], 2, 4) => [3, 7]
     public static int[] subArray(int[] arr, int begin, int end) {
-        // YOUR CODE HERE
-        return null;
+        int[] output = new int[end-begin];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = arr[begin+i];
+        }
+        return output;
     }
 
     // Carries out merge sort!
@@ -43,8 +85,19 @@ public class MyMain {
     // Examples:
     // mergeSort([6, 3, 4, 1, 5, 8, 7, 2]) => [1, 2, 3, 4, 5, 6, 7, 8]
     public static int[] mergeSort(int[] arr) {
-        // YOUR CODE HERE
-        return null;
+        if (arr.length <= 1) {
+            return arr;
+        }
+        else {
+            int[] leftHalf = subArray(arr, 0, arr.length/2);
+            int[] rightHalf = subArray(arr, arr.length/2, arr.length);
+
+            leftHalf = mergeSort(leftHalf);
+            rightHalf = mergeSort(rightHalf);
+
+            int[] sorted = merge(leftHalf, rightHalf);
+            return sorted;
+        }
     }
 
 
@@ -71,16 +124,24 @@ public class MyMain {
     // insert([1, 2, 4, 5], 3) => [1, 2, 3, 4, 5]
     // insert([1, 2, 4, 5], 0) => [0, 1, 2, 4, 5]
     // insert([1, 2, 4, 5, 7, 8], 10) => [1, 2, 4, 5, 7, 8, 10]
-
-    // Wrapper method
     public static ArrayList<Integer> insert(ArrayList<Integer> list, int x) {
         return insertTR(list, x, 0);
     }
 
-    // Tail recursive method
     public static ArrayList<Integer> insertTR(ArrayList<Integer> list, int x, int i) {
-        // YOUR CODE HERE
-        return null;
+        // If we made it through the whole array, we must add x to the end
+        if (i == list.size()) {
+            list.add(x);
+            return list;
+        }
+        // If we found the larger value, insert x at this index
+        else if (list.get(i) > x) {
+            list.add(i, x);
+            return list;
+        }
+        else {
+            return insertTR(list, x, i+1);
+        }
     }
 
     // Next, write the insertion sort method, which is sorts a given
@@ -94,14 +155,20 @@ public class MyMain {
     // * Recursively sort the (now shorter) list
     // * Insert the saved value into the sorted, shorter list
 
-    // No tail recursion necessary!
+    // No tail recursion necessary
 
     // Hint: use the insert value from above
 
     // Examples:
     /// insertionSort([6, 3, 4, 1, 5, 8, 7, 2]) => [1, 2, 3, 4, 5, 6, 7, 8]
     public static ArrayList<Integer> insertionSort(ArrayList<Integer> list) {
-        // YOUR CODE HERE
-        return null;
+        if (list.size() == 1) {
+            return list;
+        }
+        else {
+            int x = list.remove(list.size() - 1);
+            list = insertionSort(list);
+            return insert(list, x);
+        }
     }
 }
